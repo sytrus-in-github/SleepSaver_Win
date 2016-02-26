@@ -9,7 +9,7 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 3 tasks will be created in Task Scheduler:
 
 * __autoShutDown__:         shut down the computer at a specified time. (default 01:00)
-* __autoShutDownAlert__:    Alert the user 1 hour before the shut down and repeat each 15 minutes
+* __autoShutDownAlert__:    Alert the user 1 hour before the shut down and repeat every 15 minutes
 * __autoShutDownRestore__:  Reactivate autoShutDown if deactivated, checked after each login.
 
 ## usage:
@@ -19,6 +19,6 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 * To switch off _temporarily_ / switch back on: run __switch.vbs__
 * To uninstall SleepSaver, remove tasks mentioned above: run __uninstall.vbs__
 
-__Tested on Windows 7 x64__
+__Tested on Windows 7 x64, might work for other Windows systems.__
 
 :flashlight: __Torchlight Present__ :flashlight:
