@@ -1,0 +1,1 @@
+@if exist "D:\sleepSaver\OFF" call "D:\sleepSaver\autoDownSwitch.bat"
