@@ -1,10 +1,14 @@
 @echo off
+echo.
+echo Time to go to bed.
+echo.
 echo Current time:
 echo.
 echo %time%
 echo.
-echo Time to go to bed.
+echo Computer shutdown planned at:
 echo.
-echo Computer shutdown planned at 1:00:00.
+type "%~dp0\CURR_TIME"
+echo.
 echo.
 pause 

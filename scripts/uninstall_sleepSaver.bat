@@ -1,6 +1,7 @@
 @echo off
 
 if EXIST "%~dp0\OFF" rm -f "%~dp0\OFF"
+rm -f "%~dp0\CURR_TIME"
 
 schtasks /delete /tn "autoShutDown" /f
 schtasks /delete /tn "autoShutDownAlert" /f
