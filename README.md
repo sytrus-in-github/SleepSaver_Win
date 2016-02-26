@@ -11,6 +11,6 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 
 ## usage:
 
-* To set up different tasks:                  run __install.vbs__
-* To switch off temporarily / switch back on: run __switch.vbs__
-* To uninstall SleepSaver:                    run __uninstall.vbs__
+* To install SleepSaver, set up tasks mentioned above: run __install.vbs__
+* To switch off _temporarily_ / switch back on: run __switch.vbs__
+* To uninstall SleepSaver, remove tasks mentioned above: run __uninstall.vbs__
