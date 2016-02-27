@@ -8,7 +8,7 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 
 3 tasks will be created in Task Scheduler:
 
-* __autoShutDown__:         shut down the computer at a specified time. (default 01:00)
+* __autoShutDown__:         shut down the computer at a specified time. (default 01:00 with 5 minutes final count down.)
 * __autoShutDownAlert__:    Alert the user 1 hour before the shut down and repeat every 15 minutes
 * __autoShutDownRestore__:  Reactivate autoShutDown if deactivated, checked after each login.
 
