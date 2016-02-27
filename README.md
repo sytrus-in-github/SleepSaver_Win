@@ -20,6 +20,8 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
   * To switch off _temporarily_ / switch back on: run __switch.vbs__
 3. To uninstall SleepSaver, remove tasks mentioned above: run __uninstall.vbs__
 
-__Tested on Windows 7 x64, might work for other Windows systems.__
+__Tested on Windows 7 x64, might work on other Windows systems.__
+
+__Enjoy!__
 
 :flashlight: __Torchlight Present__ :flashlight:
