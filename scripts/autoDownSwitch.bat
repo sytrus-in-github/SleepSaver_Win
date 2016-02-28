@@ -4,7 +4,7 @@ if NOT EXIST "%~dp0\OFF" (goto _ON) else (goto _OFF)
 shutdown -a
 schtasks /Change /TN "autoShutDown" /Disable
 schtasks /Change /TN "autoShutDownAlert" /Disable
-touch "%~dp0\OFF"
+copy /y NUL "%~dp0\OFF" >NUL
 goto _EXIT
 :_OFF
 schtasks /Change /TN "autoShutDown" /Enable

@@ -1,1 +1,1 @@
-@if exist "D:\sleepSaver\OFF" call "D:\sleepSaver\autoDownSwitch.bat"
+@if exist "%~dp0\OFF" call "%~dp0\autoDownSwitch.bat"

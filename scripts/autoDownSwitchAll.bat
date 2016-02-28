@@ -6,7 +6,7 @@ schtasks /Change /TN "autoShutDown" /Disable
 schtasks /Change /TN "autoShutDownAlert" /Disable
 schtasks /Change /TN "autoShutDownRestore" /Disable
 if EXIST "%~dp0\OFF" rm -f "%~dp0\OFF"
-touch "%~dp0\STOP"
+copy /y NUL "%~dp0\STOP" >NUL
 goto _EXIT
 :_OFF
 schtasks /Change /TN "autoShutDown" /Enable
