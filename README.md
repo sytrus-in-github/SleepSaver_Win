@@ -6,6 +6,8 @@ by Torchlight
 
 This is a bunch of scripts that I use to schedule auto-shutdown so as to win back some of my sleep time :)
 
+sleepSaver will shutdown automatically your computer every day at a specified time. You will be informed an hour before the shutdown and the reminder will repeat every 15 minutes. You are free to change shutdown time and turn it off.  
+
 3 tasks will be created in Task Scheduler:
 
 * __autoShutDown__:         shut down the computer at a specified time. (default 01:00 with 5 minutes final countdown.)
