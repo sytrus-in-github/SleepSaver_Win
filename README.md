@@ -14,15 +14,11 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 
 ## usage:
 
-1. To install SleepSaver, set up tasks mentioned above: run __install.vbs__
-2. After installation:
-  * To change the time of the computer shutdown: run __changeTime.vbs__
-  * To switch off _temporarily_ / switch back on: run __switch.vbs__
-3. To uninstall SleepSaver, remove tasks mentioned above: run __uninstall.vbs__
+* __sleepSaver.vbs__: for install / configuration / uninstall
 
 ## independent utility
 
-* __stopShutDown.bat__: turns off the final countdown. (faster to double click than type `shutdown -a` in console)
+* __stopShutDown.bat__: turns off the final countdown. (faster to double click this than type `shutdown -a` in console)
 
 ## special thanks to:
 
