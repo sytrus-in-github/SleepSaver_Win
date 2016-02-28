@@ -49,27 +49,39 @@ Else
 			wscript.quit
 	end if
 	'show configuration panel and read user input
-	if fso.FileExists(strDir & "OFF") then
-		prompt = "sleepSaver is turned OFF temporarily." & vbcrlf & vbcrlf & _
-		"You can:" & vbcrlf & vbcrlf & _
-		"1. turn sleepSaver back ON" & vbcrlf & vbcrlf & _
-		"0. uninstall sleepSaver" & vbcrlf & _
-		vbcrlf & "Selection(1/0):"
+	if fso.FileExists(strDir & "STOP") then
+		prompt = "sleepSaver is DEACTIVATED (no auto-reactivation)" & vbcrlf & vbcrlf & _
+			"You can:" & vbcrlf & vbcrlf & _
+			"2. ACTIVATE sleepSaver" & vbcrlf & vbcrlf & _
+			"0. uninstall sleepSaver" & vbcrlf & _
+			vbcrlf & "Selection(2/0):"
 	else
-		Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(1, -2)
-		strTime = f.Readline
-		f.close
-		prompt = "Current time of auto shutdown: " & strTime & vbcrlf & vbcrlf & _ 
-		"You can:" & vbcrlf & vbcrlf & _
-		"1. turn OFF sleepSaver temporarily (auto-reactivation on restart)" & vbcrlf &  vbcrlf & _
-		"2. change shutdown time" & vbcrlf & vbcrlf & _
-		"0. uninstall sleepSaver" & vbcrlf & _
-		vbcrlf & "Selection(1/2/0):"
+		if fso.FileExists(strDir & "OFF") then
+			prompt = "sleepSaver is turned OFF temporarily." & vbcrlf & vbcrlf & _
+			"You can:" & vbcrlf & vbcrlf & _
+			"1. turn sleepSaver back ON" & vbcrlf & vbcrlf & _
+			"2. DEACTIVATE sleepSaver (no auto-reactivation)" & vbcrlf & vbcrlf & _
+			"0. uninstall sleepSaver" & vbcrlf & _
+			vbcrlf & "Selection(1/2/0):"
+		else
+			Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(1, -2)
+			strTime = f.Readline
+			f.close
+			prompt = "Current time of auto shutdown: " & strTime & vbcrlf & vbcrlf & _ 
+			"You can:" & vbcrlf & vbcrlf & _
+			"1. turn OFF sleepSaver temporarily (auto-reactivation on restart)" & vbcrlf &  vbcrlf & _
+			"2. DEACTIVATE sleepSaver (no auto-reactivation)" & vbcrlf & vbcrlf & _
+			"3. change shutdown time" & vbcrlf & vbcrlf & _
+			"0. uninstall sleepSaver" & vbcrlf & _
+			vbcrlf & "Selection(1/2/3/0):"
+		end if
 	end if
 	choice = InputBox(prompt,"sleepSaver config")
-	if choice = "1" then
+	if choice = "1" and not fso.FileExists(strDir & "STOP") then
 		objShell.ShellExecute strDir & "switch.vbs"
 	elseif choice = "2" then
+		objShell.ShellExecute strDir & "switchAll.vbs"
+	elseif choice = "3" and not fso.FileExists(strDir & "STOP") and not fso.FileExists(strDir & "OFF") then
 		objShell.ShellExecute strDir & "changeTime.vbs"
 	elseif choice = "" then
 	elseif choice = "0" then
