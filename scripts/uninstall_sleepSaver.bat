@@ -6,8 +6,3 @@ rm -f "%~dp0\CURR_TIME"
 schtasks /delete /tn "autoShutDown" /f
 schtasks /delete /tn "autoShutDownAlert" /f
 schtasks /delete /tn "autoShutDownRestore" /f
-
-echo.
-echo uninstallation finished.
-
-pause

@@ -5,15 +5,13 @@ if WScript.Arguments.Count = 0 then
 else
 	'get current path and script interpreter
 	strDir = replace(WScript.ScriptFullName, WScript.ScriptName, "")
-	strApp = UCase(Right(WScript.FullName, 12))
 	'load current time setting
 	Set fso = CreateObject("Scripting.FileSystemObject")
-	Set f = fso.GetFile(strDir & "scripts\CURR_TIME").OpenAsTextStream(1, -2)
+	Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(1, -2)
 	strTime = f.Readline
-	strTime = Right(strTime,5)
 	f.close
 	'prompt for user input
-	prompt = "Current time of auto shutdown: " + strTime + vbcrlf + "Enter new time (HH:MM, or nothing to discard operation):" + vbcrlf
+	prompt = "Current time of auto shutdown: " & strTime & vbcrlf & "Enter new time (HH:MM, or nothing to discard operation):" & vbcrlf
 	strTime = InputBox(prompt,,strTime)
 	'check input format
 	Err.Clear
@@ -33,11 +31,11 @@ else
 	strTime = toTime(intTime)
 	strT5 = toTime((intTime + 1435) mod 1440)
 	strT60 = toTime((intTime + 1380) mod 1440)
-	Set f = fso.GetFile(strDir & "scripts\CURR_TIME").OpenAsTextStream(2, -2)
+	Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(2, -2)
 	f.WriteLine strTime
 	f.close
 	'change time settings in tasks
-	Set f = fso.GetFile(strDir & "scripts\setTime.bat").OpenAsTextStream(2, -2)
+	Set f = fso.GetFile(strDir & "setTime.bat").OpenAsTextStream(2, -2)
 	f.WriteLine "@echo off"
 	f.WriteLine "schtasks /delete /tn autoShutDown /f"
 	f.WriteLine "schtasks /delete /tn autoShutDownAlert /f"
@@ -45,7 +43,7 @@ else
 	f.WriteLine "schtasks /create /tn autoShutDownAlert /tr "&chr(34)&"%~dp0\autoDownAlert.bat"&chr(34)&" /sc daily /st "&strT60&" /ri 15 /du 0000:55"
 	f.close
 	set oshell = CreateObject("WScript.Shell")
-	oshell.Run strDir & "scripts\setTime.bat",0,true
+	oshell.Run strDir & "setTime.bat",0,true
 	'check if need to be shut down in less than 5 minutes if so add another 1 timer
 	intDiff = 60*intTime-getSecond()
 	if intDiff > 0 and intDiff < 300 then
