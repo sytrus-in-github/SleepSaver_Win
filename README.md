@@ -22,7 +22,7 @@ This is a bunch of scripts that I use to schedule auto-shutdown so as to win bac
 
 ## independent utility
 
-* __stopShutDown.bat__: turns off the final countdown. (faster to double click than type _shutdown -a_ in console)
+* __stopShutDown.bat__: turns off the final countdown. (faster to double click than type `shutdown -a` in console)
 
 ## special thanks to:
 
