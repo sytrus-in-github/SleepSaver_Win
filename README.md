@@ -20,6 +20,7 @@ sleepSaver will shutdown automatically your computer every day at a specified ti
 
 ## independent utility
 
+* __forToday.vbs__: set up and configure auto shutdown for today. (independent and compatible with sleepSaver)
 * __stopShutDown.bat__: turns off the final countdown. (faster to double click this than type `shutdown -a` in console)
 
 ## special thanks to:
