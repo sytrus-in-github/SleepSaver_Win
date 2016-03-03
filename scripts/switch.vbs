@@ -7,7 +7,7 @@ Else
 	oshell.Run strDir & "autoDownSwitch.bat",0,true
 	Set fso = CreateObject("Scripting.FileSystemObject")
 	if fso.FileExists(strDir & "OFF") then
-		MsgBox "sleepSaver OFF temporarily, will be reactivated on restart"
+		MsgBox "sleepSaver OFF temporarily, will be reactivated on restart."
 	else
 		Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(1, -2)
 		strTime = f.Readline

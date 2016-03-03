@@ -64,8 +64,8 @@ function toMinute(str)
 	if intPos < 2 then 
 		Err.Raise 5
 	end if
-	strHour = Left(strTime, intPos-1)
-	strMin = Right(strTime, len(strTime)-intPos)
+	strHour = Left(str, intPos-1)
+	strMin = Right(str, len(str)-intPos)
 	if not IsNumeric(strHour) or not IsNumeric(strMin) then 
 		Err.Raise 5
 	end if

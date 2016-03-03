@@ -1,1 +1,0 @@
-@if exist "%~dp0\OFF" call "%~dp0\autoDownSwitch.bat"

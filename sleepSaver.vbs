@@ -36,58 +36,90 @@ Else
 			Set f = fso.GetFile(strDir & "install_sleepSaver.bat").OpenAsTextStream(2, -2)
 			f.WriteLine "@echo off"
 			f.WriteLine "schtasks /create /tn autoShutDown /tr "&chr(34)&"shutdown /s /t 300 /c "&chr(92)&chr(34)&"You need to sleep! Shutdown in 5 minutes."&chr(92)&chr(34)&chr(34)&" /sc daily /st "& strT5
-			f.WriteLine "schtasks /create /tn autoShutDownAlert /tr "&chr(34)&"%~dp0\autoDownAlert.bat"&chr(34)&" /sc daily /st "&strT60&" /ri 15 /du 0000:55"
-			f.WriteLine "schtasks /create /tn "&chr(34)&"autoShutDownRestore"&chr(34)&" /tr "&chr(34)&"%~dp0\autoDownRestart.bat"&chr(34)&" /sc ONSTART /ru " & chr(34) & chr(34)
+			f.WriteLine "schtasks /create /tn autoShutDownAlert /tr "&chr(34)& left(strDir,len(strDir)-8) &"autoDownAlert.vbs"&chr(34)&" /sc daily /st "&strT60&" /ri 15 /du 0000:55"
+			f.WriteLine "schtasks /create /tn "&chr(34)&"autoShutDownRestore"&chr(34)&" /tr "&chr(34)& left(strDir,len(strDir)-8) &"autoDownRestart.vbs"&chr(34)&" /sc ONSTART /ru " & chr(34) & chr(34)
+			'deal with TODAY
+			if fso.FileExists(strDir & "TODAY") then
+				if fso.GetFile(strDir & "TODAY").DateLastModified < dateadd("h", -24, Now) then
+					'delete old file
+					fso.DeleteFile(strDir & "TODAY")
+				else
+					'deactivate sleepSaver for today since already scheduled 
+					f.WriteLine "schtasks /Change /TN "&chr(34)&"autoShutDown"&chr(34)&" /Disable"
+					f.WriteLine "schtasks /Change /TN "&chr(34)&"autoShutDownAlert"&chr(34)&" /Disable"
+					f.WriteLine "copy /y NUL "&chr(34)&"%~dp0"&chr(92)&"OFF"&chr(34)&" >NUL"
+				end if
+			end if
 			f.close
 			oshell.Run strDir & "install_sleepSaver.bat",0,true
-			'check if need to be shut down in less than 5 minutes if so add another 1 timer
-			intDiff = 60*intTime-getSecond()
-			if intDiff > 0 and intDiff < 300 then
-				oshell.Run "shutdown /s /t "&CStr(intDiff)&" /c "&chr(34)&"You need to sleep! Shutdown in "&CStr(intDiff)&" seconds."&chr(34),0
+			'check if need to be shut down in less than 5 minutes if so add another 1-time shutdown
+			if not fso.FileExists(strDir & "TODAY") then
+				intDiff = 60*intTime-getSecond()
+				if intDiff > 10 and intDiff < 300 then
+					oshell.Run "shutdown /s /t "&CStr(intDiff)&" /c "&chr(34)&"You need to sleep! Shutdown in "&CStr(intDiff)&" seconds."&chr(34),0
+				end if
+			else
+				MsgBox "sleepSaver will be deactivated for today since shutdown schedule exists already for today.", vbInformation
 			end if
-			MsgBox("Successfully installed sleepSaver with shutdown time " & strTime)
+			MsgBox "Successfully installed sleepSaver with shutdown time " & strTime
 			wscript.quit
 	end if
 	'show configuration panel and read user input
-	if fso.FileExists(strDir & "STOP") then
-		prompt = "sleepSaver is DEACTIVATED (no auto-reactivation)" & vbcrlf & vbcrlf & _
-			"You can:" & vbcrlf & vbcrlf & _
-			"2. ACTIVATE sleepSaver" & vbcrlf & vbcrlf & _
-			"0. uninstall sleepSaver" & vbcrlf & _
-			vbcrlf & "Selection(2/0):"
+	if fso.FileExists(strDir & "TODAY") then
+		if fso.GetFile(strDir & "TODAY").DateLastModified < dateadd("h", -24, Now) then
+			'delete old file
+			fso.DeleteFile(strDir & "TODAY")
+		else
+			'launch today.vbs to deal with today functionality
+			objShell.ShellExecute left(strDir,len(strDir)-8) & "forToday.vbs"
+			wscript.quit
+		end if
 	else
-		if fso.FileExists(strDir & "OFF") then
-			prompt = "sleepSaver is turned OFF temporarily." & vbcrlf & vbcrlf & _
-			"You can:" & vbcrlf & vbcrlf & _
-			"1. turn sleepSaver back ON" & vbcrlf & vbcrlf & _
-			"2. DEACTIVATE sleepSaver (no auto-reactivation)" & vbcrlf & vbcrlf & _
-			"0. uninstall sleepSaver" & vbcrlf & _
-			vbcrlf & "Selection(1/2/0):"
+		if fso.FileExists(strDir & "STOP") then
+			prompt = "sleepSaver is deactivated (no auto-reactivation)" & vbcrlf & vbcrlf & _
+				"You can:" & vbcrlf & vbcrlf & _
+				"1. Set up sleepSaver for today" & vbcrlf & "(will be back to deactivation on restart)"& vbcrlf & vbcrlf & _
+				"9. Activate sleepSaver" & vbcrlf & vbcrlf & _
+				"0. Uninstall sleepSaver" & vbcrlf & _
+				vbcrlf & "Selection(1/9/0):"
 		else
 			Set f = fso.GetFile(strDir & "CURR_TIME").OpenAsTextStream(1, -2)
 			strTime = f.Readline
 			f.close
-			prompt = "Current time of auto shutdown: " & strTime & vbcrlf & vbcrlf & _ 
-			"You can:" & vbcrlf & vbcrlf & _
-			"1. turn OFF sleepSaver temporarily (auto-reactivation on restart)" & vbcrlf &  vbcrlf & _
-			"2. DEACTIVATE sleepSaver (no auto-reactivation)" & vbcrlf & vbcrlf & _
-			"3. change shutdown time" & vbcrlf & vbcrlf & _
-			"0. uninstall sleepSaver" & vbcrlf & _
-			vbcrlf & "Selection(1/2/3/0):"
+			if fso.FileExists(strDir & "OFF") then
+				prompt = "sleepSaver is deactivated for today" & "(will be back to " &strTime& " on restart)"& vbcrlf & vbcrlf & _
+				"You can:" & vbcrlf & vbcrlf & _
+				"1. Set up sleepSaver for today" & vbcrlf & "(will be back to " &strTime& " on restart)"& vbcrlf & vbcrlf & _
+				"2. Turn sleepSaver back on" & vbcrlf & vbcrlf & _
+				"9. Deactivate sleepSaver" & vbcrlf & "(no auto-reactivation)" & vbcrlf & vbcrlf & _
+				"0. Uninstall sleepSaver" & vbcrlf & _
+				vbcrlf & "Selection(1/2/9/0):"
+			else	
+				prompt = "Current time of auto shutdown: " & strTime & vbcrlf & vbcrlf & _ 
+				"You can:" & vbcrlf & vbcrlf & _
+				"1. Change shutdown time for today" & vbcrlf & "(will be back to " &strTime& " on restart)"& vbcrlf & vbcrlf & _
+				"2. Deactivate sleepSaver for today" & vbcrlf & "(auto-reactivation on restart)" & vbcrlf &  vbcrlf & _
+				"3. Change shutdown time" & vbcrlf & vbcrlf & _
+				"9. Deactivate sleepSaver" & vbcrlf & "(no auto-reactivation)" & vbcrlf & vbcrlf & _
+				"0. Uninstall sleepSaver" & vbcrlf & _
+				vbcrlf & "Selection(1/2/3/9/0):"
+			end if
 		end if
 	end if
 	choice = InputBox(prompt,"sleepSaver config")
-	if choice = "1" and not fso.FileExists(strDir & "STOP") then
+	if choice = "" then
+	elseif choice = "1" then
+		objShell.ShellExecute left(strDir,len(strDir)-8) & "forToday.vbs"
+	elseif choice = "2" and not fso.FileExists(strDir & "STOP") then
 		objShell.ShellExecute strDir & "switch.vbs"
-	elseif choice = "2" then
-		objShell.ShellExecute strDir & "switchAll.vbs"
 	elseif choice = "3" and not fso.FileExists(strDir & "STOP") and not fso.FileExists(strDir & "OFF") then
 		objShell.ShellExecute strDir & "changeTime.vbs"
-	elseif choice = "" then
+	elseif choice = "9" then
+		objShell.ShellExecute strDir & "switchAll.vbs"
 	elseif choice = "0" then
 		objShell.ShellExecute strDir & "uninstall.vbs"
 	else
-		MsgBox "wrong input format"
+		MsgBox "Wrong input format."
 	end if
 End If
 
@@ -103,8 +135,8 @@ function toMinute(str)
 	if intPos < 2 then 
 		Err.Raise 5
 	end if
-	strHour = Left(strTime, intPos-1)
-	strMin = Right(strTime, len(strTime)-intPos)
+	strHour = Left(str, intPos-1)
+	strMin = Right(str, len(str)-intPos)
 	if not IsNumeric(strHour) or not IsNumeric(strMin) then 
 		Err.Raise 5
 	end if
